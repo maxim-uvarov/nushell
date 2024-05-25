@@ -37,6 +37,9 @@ polars-utils = { version = "0.39"}
 typetag = "0.2"
 uuid = { version = "1.7", features = ["v4", "serde"] }
 
+[target.'cfg(not(target_env = "msvc"))'.dependencies]
+jemallocator = "*"
+
 [dependencies.polars]
 features = [
 	"arg_where",
