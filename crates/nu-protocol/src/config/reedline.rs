@@ -21,6 +21,11 @@ pub struct ParsedMenu {
     pub style: Value,
     pub r#type: Value,
     pub source: Option<Closure>,
+    /// Whether the menu should close when the buffer becomes empty
+    /// Default: true (menu closes when buffer is empty)
+    /// Set to false to keep the menu open even when the last character is deleted
+    #[nu_value(default)]
+    pub close_on_empty: Option<Value>,
 }
 
 /// Definition of a Nushell CursorShape (to be mapped to crossterm::cursor::CursorShape)
