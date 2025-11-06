@@ -507,8 +507,10 @@ $env.config.keybindings ++= [
 $env.config.menus ++= [
     {
         name: help_menu
-        only_buffer_difference: true
+        only_buffer_difference: true   # Search is done on the text written after activating the menu
         marker: "? "
+        close_on_empty: true            # Whether to close the menu when the buffer becomes empty (default: true)
+                                        # Set to false to keep the menu open even when all text is deleted
         type: {
             layout: description
             columns: 4
@@ -532,6 +534,8 @@ $env.config.menus ++= [{
     name: completion_menu
     only_buffer_difference: false     # Search is done on the text written after activating the menu
     marker: "| "                      # Indicator that appears with the menu is active
+    close_on_empty: true              # Whether to close the menu when the buffer becomes empty (default: true)
+                                      # Set to false to keep the menu open even when all text is deleted
     type: {
         layout: columnar              # Type of menu
         columns: 4                    # Number of columns where the options are displayed
