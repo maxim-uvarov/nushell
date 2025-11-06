@@ -319,10 +319,11 @@ pub(crate) fn add_columnar_menu(
     let only_buffer_difference = menu.only_buffer_difference.as_bool()?;
     columnar_menu = columnar_menu.with_only_buffer_difference(only_buffer_difference);
 
-    let close_on_empty = menu.close_on_empty
+    let close_on_empty = menu
+        .close_on_empty
         .as_ref()
         .and_then(|v| v.as_bool().ok())
-        .unwrap_or(true);  // Default to true to maintain current behavior
+        .unwrap_or(true); // Default to true to maintain current behavior
     columnar_menu = columnar_menu.with_close_on_empty(close_on_empty);
 
     let completer = if let Some(closure) = &menu.source {
@@ -374,10 +375,11 @@ pub(crate) fn add_list_menu(
     let only_buffer_difference = menu.only_buffer_difference.as_bool()?;
     list_menu = list_menu.with_only_buffer_difference(only_buffer_difference);
 
-    let close_on_empty = menu.close_on_empty
+    let close_on_empty = menu
+        .close_on_empty
         .as_ref()
         .and_then(|v| v.as_bool().ok())
-        .unwrap_or(true);  // Default to true to maintain current behavior
+        .unwrap_or(true); // Default to true to maintain current behavior
     list_menu = list_menu.with_close_on_empty(close_on_empty);
 
     let completer = if let Some(closure) = &menu.source {
@@ -554,10 +556,11 @@ pub(crate) fn add_ide_menu(
     let only_buffer_difference = menu.only_buffer_difference.as_bool()?;
     ide_menu = ide_menu.with_only_buffer_difference(only_buffer_difference);
 
-    let close_on_empty = menu.close_on_empty
+    let close_on_empty = menu
+        .close_on_empty
         .as_ref()
         .and_then(|v| v.as_bool().ok())
-        .unwrap_or(true);  // Default to true to maintain current behavior
+        .unwrap_or(true); // Default to true to maintain current behavior
     ide_menu = ide_menu.with_close_on_empty(close_on_empty);
 
     let completer = if let Some(closure) = &menu.source {
@@ -641,10 +644,11 @@ pub(crate) fn add_description_menu(
     let only_buffer_difference = menu.only_buffer_difference.as_bool()?;
     description_menu = description_menu.with_only_buffer_difference(only_buffer_difference);
 
-    let close_on_empty = menu.close_on_empty
+    let close_on_empty = menu
+        .close_on_empty
         .as_ref()
         .and_then(|v| v.as_bool().ok())
-        .unwrap_or(true);  // Default to true to maintain current behavior
+        .unwrap_or(true); // Default to true to maintain current behavior
     description_menu = description_menu.with_close_on_empty(close_on_empty);
 
     let completer = if let Some(closure) = &menu.source {
