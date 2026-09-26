@@ -279,17 +279,23 @@ fn components_eq(a: &Component, b: &Component, fold_case: bool) -> bool {
             a == b
                 || a.to_str()
                     .zip(b.to_str())
-                    .is_some_and(|(a, b)| lowercase_eq(a, b))
+                    .is_some_and(|(a, b)| caseless_eq(a, b))
         }
         _ => a == b,
     }
 }
 
 /// Compares two strings ignoring case, without allocating.
-fn lowercase_eq(a: &str, b: &str) -> bool {
-    a.chars()
-        .flat_map(char::to_lowercase)
-        .eq(b.chars().flat_map(char::to_lowercase))
+fn caseless_eq(a: &str, b: &str) -> bool {
+    // Why: lowercasing alone keeps the final sigma `ς` apart from `σ`, while
+    // case-insensitive filesystems treat `ΟΔΟΣ`, `οδος` and `οδοσ` as one name.
+    // Uppercasing first maps all three to `Σ`.
+    fn fold(s: &str) -> impl Iterator<Item = char> + '_ {
+        s.chars()
+            .flat_map(char::to_uppercase)
+            .flat_map(char::to_lowercase)
+    }
+    fold(a).eq(fold(b))
 }
 
 /// Check if the current filesystem is typically case-insensitive
@@ -532,11 +538,13 @@ mod tests {
     }
 
     #[test]
-    fn lowercase_eq_ignores_case() {
-        assert!(lowercase_eq("Etc", "eTC"));
-        assert!(lowercase_eq("ÄBC", "äbc"));
-        assert!(!lowercase_eq("abc", "abd"));
-        assert!(!lowercase_eq("abc", "ab"));
+    fn caseless_eq_ignores_case() {
+        assert!(caseless_eq("Etc", "eTC"));
+        assert!(caseless_eq("ÄBC", "äbc"));
+        assert!(!caseless_eq("abc", "abd"));
+        assert!(!caseless_eq("abc", "ab"));
+        assert!(caseless_eq("ΟΔΟΣ", "οδος"));
+        assert!(caseless_eq("ΟΔΟΣ", "οδοσ"));
     }
 
     #[test]
