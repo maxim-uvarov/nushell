@@ -50,7 +50,8 @@ impl Command for PathRelativeTo {
 absolute or both relative. Without --walk-up, the argument path needs to be a
 parent of the input path.
 
-The paths are compared as text, without touching the filesystem. With --walk-up,
+The paths are compared as text, without touching the filesystem, after `~` and
+`...` (and longer runs of dots) are expanded. `..` is kept as it is. With --walk-up,
 each `..` in the result stands for the textual parent of the argument path, so
 if the argument path goes through a symbolic link, the result may point
 somewhere else than the textual path suggests. When --walk-up has to add `..`,
@@ -175,7 +176,7 @@ fn relative_to(path: &Path, span: Span, args: &Arguments) -> Value {
         Err(Refusal::ParentDirInBase) => Value::error(
             GenericError::new(
                 String::from("Cannot walk up from the argument path to the input path."),
-                "this path has `..` after the part it shares with the input path",
+                "this path goes up (`..`) after the part it shares with the input path",
                 args.path.span,
             )
             .with_help("A `..` cannot be walked back without the filesystem. Try `path expand` on both paths first.")
