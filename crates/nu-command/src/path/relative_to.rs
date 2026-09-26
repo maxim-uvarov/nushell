@@ -169,7 +169,7 @@ fn relative_to(path: &Path, span: Span, args: &Arguments) -> Value {
                 "the input path and the argument path have different roots",
                 span,
             )
-            .with_help("Both paths need to be absolute, or both relative, and on the same drive.")
+            .with_help("Both paths need to start the same way: both relative, or both from the same root and drive. On Windows, `\\a` has a root but no drive.")
             .into(),
             span,
         ),
