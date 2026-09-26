@@ -290,11 +290,18 @@ fn components_eq(a: &Component, b: &Component, fold_case: bool) -> bool {
 fn caseless_eq(a: &str, b: &str) -> bool {
     // Why: lowercasing alone keeps the final sigma `ς` apart from `σ`, while
     // case-insensitive filesystems treat `ΟΔΟΣ`, `οδος` and `οδοσ` as one name.
-    // Uppercasing first maps all three to `Σ`.
+    // Uppercasing maps all three to `Σ`.
+    // A letter whose uppercase is several letters is kept as it is: NTFS
+    // upcases one letter to one letter, so `ß` and `ss` stay different names
+    // there, while a full mapping would make them equal (`ß` → `SS`).
     fn fold(s: &str) -> impl Iterator<Item = char> + '_ {
-        s.chars()
-            .flat_map(char::to_uppercase)
-            .flat_map(char::to_lowercase)
+        s.chars().map(|c| {
+            let mut upper = c.to_uppercase();
+            match (upper.next(), upper.next()) {
+                (Some(u), None) => u,
+                _ => c,
+            }
+        })
     }
     fold(a).eq(fold(b))
 }
@@ -546,6 +553,10 @@ mod tests {
         assert!(!caseless_eq("abc", "ab"));
         assert!(caseless_eq("ΟΔΟΣ", "οδος"));
         assert!(caseless_eq("ΟΔΟΣ", "οδοσ"));
+        // a letter never matches several letters
+        assert!(!caseless_eq("ß", "ss"));
+        assert!(!caseless_eq("straße", "STRASSE"));
+        assert!(!caseless_eq("ﬁ", "fi"));
     }
 
     #[test]
